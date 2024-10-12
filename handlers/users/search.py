@@ -20,6 +20,8 @@ async def inline_search(query: InlineQuery):
                 id=str(voice[0]),  # Noyob ID (database `id`)
                 voice_file_id=voice[2],  # Telegramda saqlangan 'file_id' (voice_id ustuni)
                 title=voice[1],  # Ovoz nomi (voice_name ustuni)
+                caption="🔊[Boshqa ovozlar](https://t.me/testfornewbot_bot)",  # Markdown orqali havola qo'shish
+                parse_mode="Markdown"
             )
         )
 

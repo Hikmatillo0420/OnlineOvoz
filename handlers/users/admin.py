@@ -5,7 +5,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
 from filters.admin_bot import IsBotAdmin
-from keyboards.default.buttons import voice_bot
+from keyboards.default.buttons import voice_bot, majburiy_obuna
 from keyboards.inline.buttons import yes_no_button
 from loader import dp, db
 from states.voice_states import voiceStates
@@ -22,11 +22,11 @@ async def member(message: types.Message):
     count_result = db.count_users()
     await message.answer(f"👥  Foydalanuvchilar soni: {count_result}")
 
+
 @dp.message(F.text == "📤 Reklama yuborish", IsBotAdmin())
 async def reklama_start(message: types.Message, state: FSMContext):
     await message.answer("Reklama yuborish uchun rasm, video yoki matn yuboring.")
     await state.set_state(voiceStates.ask_ad_content)
-
 
 
 @dp.message(F.text == "Voice ➕", IsBotAdmin())
@@ -39,6 +39,11 @@ async def admin_add_voice(message: types.Message, state: FSMContext):
 async def admin_delete_voice(message: types.Message, state: FSMContext):
     await message.answer("voiceni nomni kiriting ! ")
     await state.set_state(voiceStates.voice_delete_name)
+
+@dp.message(F.text == "📌Majburiy Obuna", IsBotAdmin())
+async def force_channel(message: types.Message):
+    await message.answer("🔝 Majburiy obunalar qo'shish bo'limi:", reply_markup=majburiy_obuna())
+
 
 
 @dp.message(voiceStates.ask_ad_content)
@@ -66,7 +71,6 @@ async def film_check_code(message: types.Message, state: FSMContext):
     else:
         await message.answer("Bu nomda orqal hech qanday VOICE topilmadi !")
     await state.clear()
-
 
 
 @dp.message(voiceStates.voice_name)

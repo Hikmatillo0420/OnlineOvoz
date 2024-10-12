@@ -2,6 +2,8 @@ import handlers, middlewares
 from loader import dp, bot, db
 from aiogram.types.bot_command_scope_all_private_chats import BotCommandScopeAllPrivateChats
 import asyncio
+
+from middlewares.subscription_middleware import UserCheckMiddleware
 from utils.notify_admins import start, shutdown
 from utils.set_botcommands import commands
 # Info
@@ -13,6 +15,7 @@ async def main():
     try:
         await bot.delete_webhook(drop_pending_updates=True)
         await bot.set_my_commands(commands=commands, scope=BotCommandScopeAllPrivateChats(type='all_private_chats'))
+        dp.update.outer_middleware(UserCheckMiddleware())
         dp.startup.register(start)
         dp.shutdown.register(shutdown)
         # Create Users Table
@@ -20,8 +23,14 @@ async def main():
             db.create_table_users()
         except:
             pass
+
         try:
             db.create_voices_data()
+        except Exception as e:
+            print(e)
+
+        try:
+            db.create_table_kanal()
         except Exception as e:
             print(e)
         #############################
