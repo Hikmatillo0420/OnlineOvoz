@@ -10,30 +10,30 @@ from keyboards.inline.buttons import subscription_button, boshlash
 
 async def is_user_subscribed(user_id: int) -> bool:
     channels = db.get_all_channels()
-    print(f"Kanallar: {channels}")
+    # print(f"Kanallar: {channels}")
     if not channels:
-        print("Kanallar ro'yxati bo'sh, obunani tekshirmaymiz")
+        # print("Kanallar ro'yxati bo'sh, obunani tekshirmaymiz")
         return True
 
     for channel in channels:
         channel_id = int(channel['chat_id'])  # chat_id ni olamiz
-        print(f"Tekshirilayotgan kanal ID: {channel_id}")
+        # print(f"Tekshirilayotgan kanal ID: {channel_id}")
         try:
             chat_member = await bot.get_chat_member(chat_id=channel_id, user_id=user_id)
-            print(f"Foydalanuvchi statusi: {chat_member.status}")
+            # print(f"Foydalanuvchi statusi: {chat_member.status}")
             if chat_member.status not in ['member', 'administrator', 'creator']:
-                print("Foydalanuvchi obuna emas")
+                # print("Foydalanuvchi obuna emas")
                 return False
 
         except TelegramBadRequest as e:
-            print(f"Telegram xatosi: {e.message}")
+            # print(f"Telegram xatosi: {e.message}")
             continue
 
         except Exception as e:
-            print(f"Xato yuz berdi: {e}")
+            # print(f"Xato yuz berdi: {e}")
             continue
 
-    print("Foydalanuvchi barcha kanallarga obuna")
+    # print("Foydalanuvchi barcha kanallarga obuna")
     return True
 
 
@@ -45,8 +45,7 @@ async def start_bot(message: types.Message):
         if not user:
             db.add_user(fullname=message.from_user.full_name, telegram_id=message.from_user.id)
             print(f"Yangi foydalanuvchi qo'shildi: {user_id}")
-        else:
-            print(f"Foydalanuvchi allaqachon mavjud: {user}")
+
     except Exception as e:
         print(f"Foydalanuvchini qo'shishda xatolik: {e}")
 

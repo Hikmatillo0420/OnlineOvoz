@@ -16,26 +16,26 @@ class UserCheckMiddleware(BaseMiddleware):
         event: TelegramObject,
         data: Dict[str, Any]
     ) -> Any:
-        print("Middleware ishladi")
+        # print("Middleware ishladi")
         event = cast(Update, event)
         user_id = None
 
         if event.message:
-            print("Eventda message bor")
+            # print("Eventda message bor")
             user = event.message.from_user
             user_id = user.id
             message = event.message
         elif event.callback_query:
-            print("Eventda callback_query bor")
+            # print("Eventda callback_query bor")
             user = event.callback_query.from_user
             user_id = user.id
             message = event.callback_query.message
         else:
-            print("Eventda message ham, callback_query ham yo'q")
+            # print("Eventda message ham, callback_query ham yo'q")
             return await handler(event, data)
 
         if not await is_user_subscribed(user_id):
-            print(f"Foydalanuvchi {user_id} obuna emas")
+            # print(f"Foydalanuvchi {user_id} obuna emas")
             await message.answer(
                 "⚠️ Botdan foydalanish uchun, quyidagi kanallarga obuna bo'ling:",
                 reply_markup=await subscription_button()
