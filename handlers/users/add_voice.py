@@ -2,24 +2,25 @@ from aiogram import types, F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
+from filters import isPrivate
 from filters.admin_bot import IsBotAdmin
 from keyboards.default.buttons import voice_bot
 from keyboards.inline.buttons import yes_no_button
 from loader import dp, db
 from states.voice_states import voiceStates
-from aiogram.filters import Command
-@dp.message(F.text == "🔙 Orqaga", IsBotAdmin())
+
+@dp.message(F.text == "🔙 Orqaga", IsBotAdmin(),isPrivate())
 async def orqaga(message: types.Message, state: FSMContext):
     await state.clear()
     await message.answer("🔝 Asosiy Menyu", reply_markup=voice_bot())
 
-@dp.message(F.text == "➕Voice", IsBotAdmin())
+@dp.message(F.text == "➕Voice", IsBotAdmin(),isPrivate())
 async def admin_add_voice(message: types.Message, state: FSMContext):
     await message.answer("Voice'ni qisqa nomni yozing ! ")
     await state.set_state(voiceStates.voice_name)
 
 
-@dp.message(F.text == "➖Voice", IsBotAdmin())
+@dp.message(F.text == "➖Voice", IsBotAdmin(),isPrivate())
 async def admin_delete_voice(message: types.Message, state: FSMContext):
     await message.answer("voiceni nomni kiriting ! ")
     await state.set_state(voiceStates.voice_delete_name)

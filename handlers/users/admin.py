@@ -2,43 +2,40 @@ import asyncio
 
 from aiogram import types, F
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery
 
 from filters.admin_bot import IsBotAdmin
+from filters.private_chat import isPrivate
 from keyboards.default.buttons import voice_bot, majburiy_obuna, add_or_delete_voice
-from keyboards.inline.buttons import yes_no_button
 from loader import dp, db
 from states.voice_states import voiceStates
 from aiogram.filters import Command
 
 
-@dp.message(Command('admin'), IsBotAdmin())
+@dp.message(Command('admin'), IsBotAdmin(),isPrivate())
 async def start_admin_bot(message: types.Message):
     await message.answer("🔝 Admin panel....", reply_markup=voice_bot())
 
 
-@dp.message(F.text == "🛎 Obunachilar soni", IsBotAdmin())
+@dp.message(F.text == "🛎 Obunachilar soni", IsBotAdmin(),isPrivate())
 async def member(message: types.Message):
     count_result = db.count_users()
     await message.answer(f"👥  Foydalanuvchilar soni: {count_result}")
 
 
-@dp.message(F.text == "📤 Reklama yuborish", IsBotAdmin())
+@dp.message(F.text == "📤 Reklama yuborish", IsBotAdmin(),isPrivate())
 async def reklama_start(message: types.Message, state: FSMContext):
     await message.answer("Reklama yuborish uchun rasm, video yoki matn yuboring.")
     await state.set_state(voiceStates.ask_ad_content)
 
-@dp.message(F.text == "🔊 Voice joylash / o'chrish", IsBotAdmin())
+
+@dp.message(F.text == "🔊 Voice joylash / o'chrish", IsBotAdmin(),isPrivate())
 async def admin_addAnddelete_voice(message: types.Message, state: FSMContext):
-    await message.answer("🔝 Voice bo'limi",reply_markup=add_or_delete_voice())
+    await message.answer("🔝 Voice bo'limi", reply_markup=add_or_delete_voice())
 
 
-
-
-@dp.message(F.text == "📌Majburiy Obuna", IsBotAdmin())
+@dp.message(F.text == "📌Majburiy Obuna", IsBotAdmin(),isPrivate())
 async def force_channel(message: types.Message):
     await message.answer("🔝 Majburiy obunalar qo'shish bo'limi:", reply_markup=majburiy_obuna())
-
 
 
 @dp.message(voiceStates.ask_ad_content)
@@ -66,4 +63,3 @@ async def film_check_code(message: types.Message, state: FSMContext):
     else:
         await message.answer("Bu nomda orqal hech qanday VOICE topilmadi !")
     await state.clear()
-

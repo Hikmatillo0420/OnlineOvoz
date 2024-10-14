@@ -32,12 +32,13 @@ async def delete_channel_button():
 
     for kanal in kanallar:
         tugma = InlineKeyboardButton(
-            text=f"{kanal[2]}",  # 'url' maydoni
-            callback_data=f"delete_channel_{kanal[1]}"  # 'chat_id' maydoni
+            text=f"{kanal['url']}",  # 'url' maydoni
+            callback_data=f"delete_channel_{kanal['chat_id']}"  # 'chat_id' maydoni
         )
         inline_keyboard.append([tugma])
 
     return InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
+
 
 async def subscription_button():
     channels = db.get_all_channels()

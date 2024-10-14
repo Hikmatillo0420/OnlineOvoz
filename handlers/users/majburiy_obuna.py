@@ -3,6 +3,7 @@ from mailbox import Message
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
+from filters import isPrivate
 from filters.admin_bot import IsBotAdmin
 from keyboards.inline.buttons import delete_channel_button
 from loader import dp, db
@@ -12,13 +13,13 @@ from keyboards.default.buttons import voice_bot
 from states.voice_states import voiceStates
 
 
-@dp.message(F.text == "🔙 Orqaga", IsBotAdmin())
+@dp.message(F.text == "🔙 Orqaga", IsBotAdmin(),isPrivate())
 async def orqaga(message: types.Message, state: FSMContext):
     await state.clear()
     await message.answer("🔝 Asosiy Menyu", reply_markup=voice_bot())
 
 
-@dp.message(F.text == "➕ Kanal qo'shish", IsBotAdmin())
+@dp.message(F.text == "➕ Kanal qo'shish", IsBotAdmin(),isPrivate())
 async def add_channel(message: types.Message, state: FSMContext):
     await message.answer("Majburiy obunaga qo'shmoqchi bo'lgan telegram kanaldan biron habarni uzating !")
     await state.set_state(voiceStates.chat_id)
@@ -55,7 +56,7 @@ async def process_channel_link(message: Message, state: FSMContext):
 
 
 
-@dp.message(F.text == "➖ Kanal o'chrish", IsBotAdmin())
+@dp.message(F.text == "➖ Kanal o'chrish", IsBotAdmin(),isPrivate())
 async def delete_channel(message: types.Message, state: FSMContext):
     await message.answer("O‘chirmoqchi bo‘lgan kanalingizni ustiga bosing!", reply_markup=await delete_channel_button())
 
@@ -69,7 +70,7 @@ async def process_channel_deletion(callback_query: CallbackQuery):
     await callback_query.message.edit_text("Tanlangan kanal muvaffaqiyatli o‘chirildi.")
 
 
-@dp.message(F.text == "👁‍🗨 Majburiy kanallarni ko'rish", IsBotAdmin())
+@dp.message(F.text == "👁‍🗨 Majburiy kanallarni ko'rish", IsBotAdmin(),isPrivate())
 async def list_channels(message: types.Message):
     channels = db.get_all_url()
     if channels:
